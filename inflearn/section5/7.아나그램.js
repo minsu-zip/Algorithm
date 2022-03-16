@@ -23,7 +23,7 @@ function solution(a, b) {
   }
 
   for (let [key, val] of mapA) {
-    if (mapB.has(key) && val !== mapB.get(key)) {
+    if (!mapB.has(key) || val !== mapB.get(key)) {
       answer = 'NO'
       break
     }
