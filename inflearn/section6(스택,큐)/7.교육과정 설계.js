@@ -3,27 +3,29 @@
 
 function solution(a, b) {
   let answer = true
-
   let essential = a.split('')
-  //   let course = b.split('')
-  let i = 0
 
   for (let x of b) {
-    if (essential.includes(x) && essential[0] === x) {
-      essential.shift()
-    } else if (essential.includes(x) && essential[0] !== x) {
-      return false
+    if (essential.includes(x)) {
+      // 필수 과목에 있고, 큐에 제일 앞에 있으면 선행 과목으로 수행 완료
+      if (essential[0] === x) {
+        essential.shift()
+      } else {
+        // 필수 과목에 있지만, 큐에 제일 앞에 있지 않으면 선행 과목 순서 x
+        return false
+      }
     }
   }
 
+  // 남아있는 큐 확인
   answer = essential.length === 0 ? true : false
 
   return answer
 }
 
 // true
-// let a = 'CBA'
-// let b = 'CBDAGE'
+let a = 'CBA'
+let b = 'CBDAGE'
 
 // true
 // let a = 'VDAG'
@@ -34,7 +36,7 @@ function solution(a, b) {
 // let b = 'VDFSDFDGSA'
 
 // false
-let a = 'CBA'
-let b = 'CBDGE'
+// let a = 'CBA'
+// let b = 'CBDGE'
 
 console.log(solution(a, b))
