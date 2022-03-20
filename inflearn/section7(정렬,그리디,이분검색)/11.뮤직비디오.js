@@ -10,21 +10,21 @@ function solution(a, M) {
   let DVD = [] // DVD 용량
 
   // 제일 긴 노래 이상 ~ 총 노래 시간 사이의 조건을 이분 탐색으로 순회
-  while (start < end) {
+  while (start <= end) {
     let mid = parseInt((start + end) / 2)
     let sum = 0
-    let cnt = 0
+    let cnt = 1 // DVD 레코드 수
     arr.forEach((el) => {
-      sum += el
-      if (sum > mid) {
-        DVD.push(sum - el)
+      if (sum + el > mid) {
+        DVD.push(sum)
         cnt += 1
         sum = el
+      } else {
+        sum += el
       }
     })
     // 마지막 노래 카운팅
     DVD.push(sum)
-    cnt += 1
 
     // M과 DVD 개수가 같을 때
     if (M === cnt) {
