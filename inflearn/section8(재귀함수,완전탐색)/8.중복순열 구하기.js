@@ -2,7 +2,7 @@
 
 function DFS(n, m, i, arr) {
   // 모든 n 탐색 완료
-  if (i >= n) {
+  if (i >= n || arr.length > m) {
     return
   }
 
