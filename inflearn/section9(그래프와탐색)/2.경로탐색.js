@@ -4,14 +4,17 @@ let path = [] // 탐색한 노드 경로
 
 function DFS(n, graph, visited, v, arr) {
   if (v === n) {
+    // 누적 경로 + 현재 경로
     path.push([...arr, v])
   }
-  visited[v] = 1
+  visited[v] = 1 // 현재 노드 방문 표시
 
+  // 현재 노드의 배열 길이까지 탐색
   for (let j = 0; j < graph[v].length; j++) {
+    // 현재 노드 값에 해당하는 방문 배열이 방문 한 적 없을 때
     if (visited[graph[v][j]] === 0) {
       DFS(n, graph, visited, graph[v][j], [...arr, v])
-      visited[graph[v][j]] = 0
+      visited[graph[v][j]] = 0 // 방문 해제
     }
   }
 }
