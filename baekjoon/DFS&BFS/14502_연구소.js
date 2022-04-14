@@ -6,7 +6,9 @@ const [nm, ...input] = fs
   .split('\n')
 const [n, m] = nm.split(' ').map(Number)
 const graph = input.map((x) => x.split(' ').map(Number))
-const safeSize = new Set()
+
+let answer = 0 // 안전 지역 최대 개수
+const virus = [] // 바이러스 좌표
 
 // 상하좌우
 const dx = [-1, 1, 0, 0]
@@ -21,38 +23,25 @@ function isRange(dx, dy) {
 }
 
 // graph 복사
-function copyGraph(graph) {
-  let tmp = Array.from(Array(n), () => Array(0))
-  graph.forEach((_, i) => {
-    tmp[i].push(...graph[i])
-  })
-  return tmp
+function copyArray(array) {
+  return array.map((_, i) => [...array[i]])
 }
 
 // 안전지역 갯수 찾기
-function safeArea(graph) {
+function safeArea(wallGraph) {
   let cnt = 0
-  graph.forEach((_, i) => {
-    graph[i].forEach((_, j) => {
-      if (graph[i][j] === 0) {
+  wallGraph.forEach((_, i) => {
+    wallGraph[i].forEach((_, j) => {
+      if (wallGraph[i][j] === 0) {
         cnt += 1
       }
     })
   })
-  safeSize.add(cnt)
+  answer = Math.max(answer, cnt)
 }
 
-function BFS(graph) {
-  const queue = []
-
-  // 바이러스 좌표 queue 삽입
-  graph.forEach((_, i) => {
-    graph[i].forEach((_, j) => {
-      if (graph[i][j] === 2) {
-        queue.push([i, j])
-      }
-    })
-  })
+function BFS(wallGraph) {
+  let queue = copyArray(virus)
 
   while (queue.length) {
     let [i, j] = queue.shift()
@@ -60,49 +49,45 @@ function BFS(graph) {
       let mx = i + dx[k]
       let my = j + dy[k]
 
-      if (isRange(mx, my) && graph[mx][my] === 0) {
-        graph[mx][my] = 2
+      if (isRange(mx, my) && wallGraph[mx][my] === 0) {
+        wallGraph[mx][my] = 2
         queue.push([mx, my])
       }
     }
   }
 
-  safeArea(graph)
-}
-
-// 벽 세우기
-function wall(graph, k) {
-  if (k === 3) {
-    BFS(copyGraph(graph))
-    return
-  } else {
-    graph.forEach((_, i) => {
-      graph[i].forEach((_, j) => {
-        if (graph[i][j] === 0) {
-          graph[i][j] = 1
-          wall(graph, k + 1)
-          graph[i][j] = 0
-        }
-      })
-    })
-  }
+  safeArea(wallGraph)
 }
 
 function solution() {
-  let answer = 0
+  let safeZone = [] // 벽을 설치할 수 있는 0의 좌표
 
-  // 벽 세우기
   graph.forEach((_, i) => {
     graph[i].forEach((_, j) => {
       if (graph[i][j] === 0) {
-        graph[i][j] = 1
-        wall(graph, 1)
-        graph[i][j] = 0
+        safeZone.push([i, j])
+      }
+      // 바이러스 좌표
+      else if (graph[i][j] === 2) {
+        virus.push([i, j])
       }
     })
   })
 
-  answer = Math.max(...safeSize)
+  // 벽 세개 세우기
+  // graph[i] 번째 반복하면서 0의 인덱스 3개를 찾아서 벽을 세운 후 BFS 실행
+  // BFS 종료 후 벽을 없애고 새로운 벽 3개를 찾아 BFS 실행
+  for (let i = 0; i < safeZone.length - 2; i++) {
+    for (let j = i + 1; j < safeZone.length - 1; j++) {
+      for (let k = j + 1; k < safeZone.length; k++) {
+        let wallGraph = copyArray(graph)
+        wallGraph[safeZone[i][0]][safeZone[i][1]] = 1
+        wallGraph[safeZone[j][0]][safeZone[j][1]] = 1
+        wallGraph[safeZone[k][0]][safeZone[k][1]] = 1
+        BFS(wallGraph)
+      }
+    }
+  }
 
   return answer
 }
