@@ -1,17 +1,14 @@
 function strSlice(str) {
   const array = []
-  // 2개씩 자르기
   for (let i = 0; i < str.length - 1; i++) {
-    array.push(str.substr(i, 2))
+    const node = str.substr(i, 2)
+    if (node.match(/[A-Za-z]{2}/)) {
+      array.push(node.toUpperCase())
+    }
   }
 
   const result = {}
-  // 문자열 추출 -> 정렬 -> undefined 제거 -> 문자 개수 세기
-  array
-    .flatMap((x) => x.toUpperCase().match(/^[a-zA-Z]*$/g))
-    .sort()
-    .filter(Boolean)
-    .forEach((x) => (result[x] = (result[x] || 0) + 1))
+  array.forEach((x) => (result[x] = (result[x] || 0) + 1))
 
   return result
 }
