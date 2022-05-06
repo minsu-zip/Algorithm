@@ -98,7 +98,7 @@ const dijkstra = (graph) => {
     const { vertex, cost } = minHeap.extract()
 
     if (graph[vertex] === undefined) continue // 연결 노드가 없는 경우
-    if (distance[vertex] < cost) continue // 기존 비용보다 현재 노드를 거친 비용이 큰 경우
+    if (distance[vertex] < cost) continue // 이미 방문 처리된 경우 현재 비용보다 작거나 같다.
 
     for ([v, w] of graph[vertex]) {
       // 기존 비용보다 <= 연결된 노드의 비용 + 현재 노드의 비용이 더 큰 경우
