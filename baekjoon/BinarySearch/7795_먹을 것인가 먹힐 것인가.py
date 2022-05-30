@@ -1,4 +1,5 @@
 from collections import Counter
+from bisect import bisect_left
 import sys
 input = sys.stdin.readline
 T = int(input())
@@ -9,16 +10,9 @@ def binarySearch(listA, listB):
     sum = 0
 
     for i in listA:
-        start = 0
-        end = len(listB)-1
-        while start <= end:
-            mid = (start + end) // 2
-            if i > listB[mid]:
-                start = mid + 1
-            else:
-                end = mid - 1
-        # i 요소의 개수 만큼 큰 쌍의 개수 곱해줌
-        sum += listA[i] * start
+        # 파이썬 이분탐색 알고리즘
+        index = bisect_left(listB, i)
+        sum += listA[i] * index
 
     return sum
 
